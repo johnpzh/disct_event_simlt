@@ -5,9 +5,11 @@ from datetime import datetime
 from datetime import timedelta
 
 def get_lag_time(trace_path, extracted):
+    '''Calculate job delay time, 
+    added to the trace to get a new trace file.'''
     with open(trace_path) as trace, \
         open(extracted, 'w') as output:
-        trace_new = list()
+        # trace_new = list()
         count = 0
         for line in trace:
             attris = line.split()
@@ -26,6 +28,7 @@ def get_lag_time(trace_path, extracted):
         print('', flush=True)
 
 def get_delay_time_mean(trace_path):
+    '''Calculate mean job delay time'''
     with open(trace_path) as trace:
         delay_time = 0.0
         count = 0
@@ -41,6 +44,7 @@ def get_delay_time_mean(trace_path):
         return delay_time_mean
 
 def get_utilization(trace_path):
+    '''Calculate system utilization, using every jobs' service time'''
     with open(trace_path) as trace:
         service_time = 0.0
         count = 0
@@ -64,7 +68,40 @@ def get_utilization(trace_path):
         util = service_time / (a_n - a_1)
         return util
 
+def get_total_service_time(trace_path):
+    '''Calculate total service time'''
+    with open(trace_path) as trace:
+        count = 0
+        service_process = list()
+        for line in trace:
+            attris = line.split()
+            start_time = float(attris[1])
+            end_time = float(attris[2])
+            service_process.append([start_time, end_time])
+        service_process.sort(key=lambda time:time[0])
+
+        # Get all time ranges (periods)
+        time_range = list()
+        for start, end in service_process:
+            if len(time_range) == 0:
+                time_range.append([start, end])
+                continue
+            last_end = time_range[-1][1]
+            if start < last_end and end > last_end:
+                time_range[-1][1] = end # extend the range
+            elif start > last_end:
+                time_range.append([start, end])
+
+        # Get the totla service time
+        print('time_range:', time_range)#test
+        total_service_time = 0.0
+        for start, end in time_range:
+            total_service_time += end - start
+        return total_service_time
+
 def get_utilization_multi_servers(trace_path):
+    '''Calculate system utilization, using 
+    max(service end time) - min(service start time)'''
     with open(trace_path) as trace:
         count = 0
         service_start_time = datetime(1996, 11, 20).timestamp()
@@ -74,12 +111,12 @@ def get_utilization_multi_servers(trace_path):
             attris = line.split()
             if count == 1:
                 a_1 = float(attris[0])
-            st = float(attris[1])
-            et = float(attris[2])
-            if st < service_start_time:
-                service_start_time = st
-            if et > service_end_time:
-                service_end_time = et
+            # st = float(attris[1])
+            # et = float(attris[2])
+            # if st < service_start_time:
+            #     service_start_time = st
+            # if et > service_end_time:
+            #     service_end_time = et
             if count % 100000 == 0:
                 print('.', end='', flush=True)
         print('', flush=True)
@@ -87,13 +124,12 @@ def get_utilization_multi_servers(trace_path):
         # arrival_rate = count / (a_n - a_1)
         # service_rate = count / (service_end_time - service_start_time)
         # util = arrival_rate / service_rate
-        util = (service_end_time - service_start_time) / (a_n - a_1)
+        # util = (service_end_time - service_start_time) / (a_n - a_1)
+        util = get_total_service_time(trace_path) / (a_n - a_1)
         return util
 
-def get_utilization_multi_servers_time(trace_path):
-    pass
-
 def get_queue_length_mean(trace_path):
+    '''Calculate mean queue length'''
     with open(trace_path) as trace:
         count = 0
         arrival_times = list()
@@ -157,12 +193,12 @@ def extract():
     # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/sample/'
     # file_name = 'examples_times.csv'
 
-    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted/'
+    # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted/'
     file_name = 'UCB-Trace-846890339-848409417.csv'
-    trace_path = from_direct + file_name
+    # trace_path = from_direct + file_name
 
-    # to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
-    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
+    # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
+    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/expo_service_time/'
     extracted = to_direct + file_name
     # get_lag_time(trace_path, extracted)
 
@@ -173,12 +209,12 @@ def extract():
     # System utilization
     # utilization = get_utilization(extracted)
     # print('Utilization:', utilization)
-    # util2 = get_utilization_multi_servers(extracted)
-    # print('Util2:', util2)
+    util2 = get_utilization_multi_servers(extracted)
+    print('Util2:', util2)
 
     # Mean waiting queue length
-    queue_length = get_queue_length_mean(extracted)
-    print('Mean queue length:', queue_length)
+    # queue_length = get_queue_length_mean(extracted)
+    # print('Mean queue length:', queue_length)
 
 
 if __name__ == '__main__':
