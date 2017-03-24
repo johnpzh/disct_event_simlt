@@ -25,6 +25,13 @@ def test():
             print(count, line)
             test2()
 
+def test3():
+    a = [[0], [1], [2]]
+
+    for attris in a:
+        attris.append('a')
+    print(a)
+
 
 if __name__ == '__main__':
-    test()
+    test3()

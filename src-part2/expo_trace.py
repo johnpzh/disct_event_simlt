@@ -1,6 +1,7 @@
 '''Generate the exponential trace'''
 import os
 import subprocess as sp
+import numpy as np
 from datetime import datetime
 from datetime import timedelta
 from rvgs import Exponential as Expo
@@ -13,7 +14,8 @@ def expo_trace(trace_path, generated):
         for line in trace:
             count += 1
             attris = line.split()
-            service_time = Expo(MEAN_EXPO)
+            # service_time = Expo(MEAN_EXPO)
+            service_time = np.random.exponential(MEAN_EXPO)
             # Need to change: Service End Time,
             #                 Service Time, and
             #                 Job Delay Time (end time - arril time)

@@ -93,7 +93,7 @@ def get_total_service_time(trace_path):
                 time_range.append([start, end])
 
         # Get the totla service time
-        print('time_range:', time_range)#test
+        # print('time_range:', time_range)#test
         total_service_time = 0.0
         for start, end in time_range:
             total_service_time += end - start
@@ -203,8 +203,8 @@ def extract():
     # get_lag_time(trace_path, extracted)
 
     # Mean Job delay time
-    # delay_time_mean = get_delay_time_mean(extracted)
-    # print('delay_time_mean:', delay_time_mean)
+    delay_time_mean = get_delay_time_mean(extracted)
+    print('delay_time_mean:', delay_time_mean)
 
     # System utilization
     # utilization = get_utilization(extracted)
