@@ -1,3 +1,9 @@
+import os
+import subprocess as sp
+import numpy as np
+from datetime import datetime
+from datetime import timedelta
+
 def test2():
     with open('test.py') as input:
         count = 0
@@ -32,6 +38,17 @@ def test3():
         attris.append('a')
     print(a)
 
+def test4():
+    factor_min = 0.102632009
+    factor_max =  0.923688084
+    a = np.linspace(factor_min, factor_max, 10)
+    print(a)
+
+    a = 1
+    print('{0:04d}'.format(a))
+
+    a = np.arange(1, 10, 2)
+    print(a)
 
 if __name__ == '__main__':
-    test3()
+    test4()

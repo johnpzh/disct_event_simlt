@@ -35,7 +35,7 @@ def get_delay_time_mean(trace_path):
         for line in trace:
             count += 1
             attris = line.split()
-            dt = float(attris[-1])
+            dt = float(attris[6])
             delay_time += dt
             if count % 100000 == 0:
                 print('.', end='', flush=True)
@@ -111,12 +111,6 @@ def get_utilization_multi_servers(trace_path):
             attris = line.split()
             if count == 1:
                 a_1 = float(attris[0])
-            # st = float(attris[1])
-            # et = float(attris[2])
-            # if st < service_start_time:
-            #     service_start_time = st
-            # if et > service_end_time:
-            #     service_end_time = et
             if count % 100000 == 0:
                 print('.', end='', flush=True)
         print('', flush=True)
@@ -125,7 +119,11 @@ def get_utilization_multi_servers(trace_path):
         # service_rate = count / (service_end_time - service_start_time)
         # util = arrival_rate / service_rate
         # util = (service_end_time - service_start_time) / (a_n - a_1)
-        util = get_total_service_time(trace_path) / (a_n - a_1)
+        total_service_time = get_total_service_time(trace_path)
+        arrival_time_range = a_n - a_1
+        util = total_service_time / arrival_time_range
+        print('@131 total_service_time:', total_service_time)#test
+        print('@32 arrival_time_range:', arrival_time_range)#test
         return util
 
 def get_queue_length_mean(trace_path):
@@ -189,33 +187,79 @@ def get_queue_length_mean(trace_path):
         result = length_v / period_total
         return result
 
-def extract():
-    # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/sample/'
-    # file_name = 'examples_times.csv'
-
+def extract_single():
     # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted/'
     file_name = 'UCB-Trace-846890339-848409417.csv'
+    # file_name = 'UCB-Trace-846890339-848409417.csv'
     # trace_path = from_direct + file_name
+    print('File:', file_name)
 
-    # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
-    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/expo_service_time/'
+    # to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
+    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/expo_service_time/'
     extracted = to_direct + file_name
     # get_lag_time(trace_path, extracted)
+    # for i in range(1, 11):
+        # to_file_name = file_name[:-4] + '_{0:02d}.csv'.format(i)
+        # extracted = to_direct + to_file_name
 
-    # Mean Job delay time
+        # Mean Job delay time
     delay_time_mean = get_delay_time_mean(extracted)
     print('delay_time_mean:', delay_time_mean)
 
     # System utilization
-    # utilization = get_utilization(extracted)
-    # print('Utilization:', utilization)
-    util2 = get_utilization_multi_servers(extracted)
-    print('Util2:', util2)
+    utilization = get_utilization(extracted)
+    print('Utilization:', utilization)
+    # util2 = get_utilization_multi_servers(extracted)
+    # print('Util2:', util2)
 
     # Mean waiting queue length
-    # queue_length = get_queue_length_mean(extracted)
-    # print('Mean queue length:', queue_length)
+    queue_length = get_queue_length_mean(extracted)
+    print('Mean queue length:', queue_length)
+
+        # result = [str(utilization), str(queue_length), str(delay_time_mean)]
+        # line = ' '.join(result)
+        # output.write(line + '\n')
+
+def extract(output):
+    # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted/'
+    file_name = 'UCB-Trace-846890339-848409417.csv'
+    # file_name = 'UCB-Trace-846890339-848409417.csv'
+    # trace_path = from_direct + file_name
+    print('File:', file_name)
+
+    # to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
+    to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/expo_service_time/'
+    # extracted = to_direct + file_name
+    # get_lag_time(trace_path, extracted)
+    for i in range(1, 6):
+        to_file_name = file_name[:-4] + '_{0:02d}.csv'.format(i)
+        extracted = to_direct + to_file_name
+
+        # Mean Job delay time
+        delay_time_mean = get_delay_time_mean(extracted)
+        print('delay_time_mean:', delay_time_mean)
+
+        # System utilization
+        utilization = get_utilization(extracted)
+        print('Utilization:', utilization)
+        # util2 = get_utilization_multi_servers(extracted)
+        # print('Util2:', util2)
+
+        # Mean waiting queue length
+        queue_length = get_queue_length_mean(extracted)
+        print('Mean queue length:', queue_length)
+
+        result = [str(utilization), str(queue_length), str(delay_time_mean)]
+        line = ' '.join(result)
+        output.write(line + '\n')
+    
 
 
 if __name__ == '__main__':
-    extract()
+    extract_single()
+    # output_file = 'outputs/expo_metrics_vs_util.txt'
+    # output_file = 'outputs/origin_metrics_vs_util.txt'
+    # with open(output_file, 'w') as output:
+    #     extract(output)

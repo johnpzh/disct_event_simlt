@@ -51,12 +51,15 @@ def get_departure_trace(trace_path, generated):
         print('', flush=True)
 
 def main():
-    from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
+    # from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
+    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time/'
     # file_name = 'examples_times.csv'
     file_name = 'UCB-Trace-846890339-848409417.csv'
     trace_path = from_direct + file_name
 
-    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_departure/'
+    # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_departure/'
+    to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    # file_name = 'UCB-Trace-846890339-848409417_depart.csv'
     generated = to_direct + file_name
 
     get_departure_trace(trace_path, generated)

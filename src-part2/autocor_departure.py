@@ -5,11 +5,12 @@ import numpy as np
 from datetime import datetime
 from datetime import timedelta
 
-def get_autocor_departure(trace_path, output_file):
-    J_MAX = 1000
+def get_autocor_departure(trace_path, output_file, pattern):
+    J_MAX = 50
     # J_MAX = 5
     with open(trace_path) as trace, \
-        open(output_file, 'w') as output:
+        open(output_file, pattern) as output:
+        # open(output_file, 'w') as output:
         # Read all inter-departure time into a list
         inter_depart_times = list()
         count = 0
@@ -51,17 +52,52 @@ def get_autocor_departure(trace_path, output_file):
         line = ' '.join(autocors)
         output.write(line + '\n')
 
+def multi_autocor_departure():
+    # Origin trace
+    from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    output_file = 'outputs/origin_depart_autocor.txt'
+
+    file_name = 'UCB-Trace-846890339-848409417.csv'
+    
+    with open(output_file, 'w') as test:
+        pass
+    count = 0
+    for i in range(1, 6):
+        to_file_name = file_name[:-4] + '_{0:02d}.csv'.format(i)
+        trace_path = from_direct + to_file_name
+        get_autocor_departure(trace_path, output_file, 'a')
+
+    # Exponential trace
+    from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
+    output_file = 'outputs/expo_depart_autocor.txt'
+
+    # file_name = 'UCB-Trace-846890339-848409417.csv'
+    
+    with open(output_file, 'w') as test:
+        pass
+    count = 0
+    for i in range(1, 6):
+        to_file_name = file_name[:-4] + '_{0:02d}.csv'.format(i)
+        trace_path = from_direct + to_file_name
+        get_autocor_departure(trace_path, output_file, 'a')
+
+
 def main():
-    from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_departure/'
+    # from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_departure/'
+    # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
+    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
     # file_name = 'examples_times.csv'
     file_name = 'UCB-Trace-846890339-848409417.csv'
+    # file_name = 'UCB-Trace-846890339-848409417_depart.csv'
     trace_path = from_direct + file_name
 
     to_direct = 'outputs/'
     file_name = 'inter-depart_time_autocor.txt'
+    # file_name = 'inter-depart_time_autocor_expo.txt'
     output_file = to_direct + file_name
 
-    get_autocor_departure(trace_path, output_file)
+    # get_autocor_departure(trace_path, output_file, 'w')
+    multi_autocor_departure()
 
 if __name__ == '__main__':
     main()

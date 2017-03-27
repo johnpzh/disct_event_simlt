@@ -30,8 +30,8 @@ def get_metrics_all(trace_path, metrics):
         for line in trace:
             count += 1
             attrbts = line.split()
-            interarrvl_time = float(attrbts[-2])
-            service_time = float(attrbts[-1])
+            interarrvl_time = float(attrbts[4])
+            service_time = float(attrbts[5])
             if count != 1:
                 interarrvl_times.append(interarrvl_time)
             service_times.append(service_time)
@@ -88,7 +88,7 @@ def get_iat_metrics_time(trace_path):
                 continue
             attrbts = line.split()
             arrival_t = float(attrbts[0])
-            interarrvl_t = float(attrbts[-2])
+            interarrvl_t = float(attrbts[5])
             i = count - 1
             iat_mean = iat_mean_q + 1/i * (interarrvl_t - iat_mean_q)
             iat_v = iat_v_q + (i-1)/i * (interarrvl_t - iat_mean_q)**2
@@ -153,7 +153,7 @@ def get_st_metrics_time(trace_path):
             count += 1
             attrbts = line.split()
             arrival_t = float(attrbts[0])
-            service_t = float(attrbts[-1])
+            service_t = float(attrbts[5])
             i = count
             st_mean = st_mean_q + 1/i * (service_t - st_mean_q)
             st_v = st_v_q + (i-1)/i * (service_t - st_mean_q)**2
@@ -205,7 +205,9 @@ def test():
 
 if __name__ == '__main__':
     # All trace
-    directory = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted/'
+    # directory = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
+    # directory = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    directory = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
     file_name = 'UCB-Trace-846890339-848409417.csv'
 
     # First part
@@ -217,18 +219,18 @@ if __name__ == '__main__':
     # file_name = 'examples_times.csv'
     trace_path = directory + file_name
     
-    # metrics = Metrics()
-    # get_metrics_all(trace_path, metrics)
-    # save_file = 'outputs/time_metrics_all.txt'
-    # with open(save_file, 'w') as output:
-    #     print('inter-arrival time mean:', metrics.iat_mean, file=output)
-    #     print('service time mean:', metrics.st_mean, file=output)
-    #     print('inter-arrival time var:', metrics.iat_var, file=output)
-    #     print('service time var:', metrics.st_var, file=output)
-    #     print('iat sd:', metrics.iat_sd, file=output)
-    #     print('st sd:', metrics.st_sd, file=output)
-    #     print('iat cv:', metrics.iat_cv, file=output)
-    #     print('st cv:', metrics.st_cv, file=output)
+    metrics = Metrics()
+    get_metrics_all(trace_path, metrics)
+    save_file = 'outputs/time_metrics_all.txt'
+    with open(save_file, 'w') as output:
+        print('inter-arrival time mean:', metrics.iat_mean, file=output)
+        print('service time mean:', metrics.st_mean, file=output)
+        print('inter-arrival time var:', metrics.iat_var, file=output)
+        print('service time var:', metrics.st_var, file=output)
+        print('iat sd:', metrics.iat_sd, file=output)
+        print('st sd:', metrics.st_sd, file=output)
+        print('iat cv:', metrics.iat_cv, file=output)
+        print('st cv:', metrics.st_cv, file=output)
 
     # get_metrics_time(trace_path)
     get_st_metrics_time(trace_path)
