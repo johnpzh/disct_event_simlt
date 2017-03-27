@@ -3,11 +3,13 @@ plot figures and calculate goodness'''
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as st
+import statistics as stat
 import math
 
 FIGURE_COUNT = 0
 
 def fitting_pdf(data, x_label, output_file):
+    print('PDF fitting:')
     global FIGURE_COUNT
     FIGURE_COUNT += 1 
     plt.figure(FIGURE_COUNT)
@@ -37,11 +39,12 @@ def fitting_pdf(data, x_label, output_file):
         plt.plot(xs, pdf_fitted, label=dist_name)
         sse = np.sum(np.power(n - pdf_fitted, 2.0))
         print(dist_name, 'sse:', sse)
+        print('loc:', params[-2], 'scale:', params[-1])
     plt.legend()
     plt.savefig(output_file, format='pdf')
 
 def fitting_cdf(data, x_label, output_file):
-
+    print('CDF fitting:')
     # Inter-arrival time
     global FIGURE_COUNT
     FIGURE_COUNT += 1 
@@ -70,7 +73,7 @@ def fitting_cdf(data, x_label, output_file):
         plt.plot(xs, cdf_fitted, label=dist_name)
         sse = np.sum(np.power(cdf - cdf_fitted, 2.0))
         print(dist_name, 'sse:', sse)
-
+        print('loc:', params[-2], 'scale:', params[-1])
     plt.legend()
     plt.savefig(output_file, format='pdf')
     # print('CDF[-1]:', cdf[-1])#test
@@ -112,10 +115,20 @@ def get_data(trace_path):
                 inter_arrival_times.append(i_a_time)
             service_times.append(s_time)
 
+
+    i_a_time_mean = stat.mean(inter_arrival_times)
+    i_a_time_stdev = stat.pstdev(inter_arrival_times)
+
+    s_time_mean = stat.mean(service_times)
+    s_time_stdev = stat.pstdev(service_times)
+
+    print('i_a_time_mean:', i_a_time_mean, 'stdev:', i_a_time_stdev)
+    print('s_time_mean:', s_time_mean, 'stdev:', s_time_stdev)
+
     # Inter-arrival Times
     output_file = 'outputs/inter_arrival_time_fit_pdf.pdf'
     x_label = 'Inter-arrival Times'
-    # fitting_pdf(inter_arrival_times, x_label, output_file)
+    fitting_pdf(inter_arrival_times, x_label, output_file)
 
     output_file = 'outputs/inter_arrival_time_fit_cdf.pdf'
     # fitting_cdf(inter_arrival_times, x_label, output_file)
@@ -123,13 +136,13 @@ def get_data(trace_path):
     # Service Times
     output_file = 'outputs/service_time_fit_pdf.pdf'
     x_label = 'Service Times'
-    # fitting_pdf(service_times, x_label, output_file)
+    fitting_pdf(service_times, x_label, output_file)
 
     output_file = 'outputs/service_time_fit_cdf.pdf'
-    fitting_cdf(service_times, x_label, output_file)
+    # fitting_cdf(service_times, x_label, output_file)
 
 if __name__ == '__main__':
-    from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
     file_name = 'UCB-Trace-846890339-848409417.csv'
     trace_path = from_direct + file_name
 

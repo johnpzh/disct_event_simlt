@@ -161,7 +161,9 @@ def main():
     output_file = to_direct + file_name
 
     # Inter-departure time autocorrelation
-    # plot_idt_autocor(input_file, output_file)
+    input_file = 'outputs/inter-depart_time_autocor_duplicated_trace.txt'
+    output_file = 'outputs/inter-depart_time_autocor_duplicated_trace.pdf'
+    plot_idt_autocor(input_file, output_file)
 
     file_name = 'inter-depart_time_autocor_expo.txt'
     input_file = from_direct + file_name
@@ -174,7 +176,7 @@ def main():
     # plot_metrics_vs_util()
 
     # Inter-departure time autocorrelation of 5 different new traces
-    plot_multi_autocor_departure()
+    # plot_multi_autocor_departure()
 
 
 if __name__ == '__main__':

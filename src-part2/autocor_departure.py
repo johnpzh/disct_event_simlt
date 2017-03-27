@@ -85,19 +85,21 @@ def multi_autocor_departure():
 def main():
     # from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_departure/'
     # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
-    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/duplicated/'
     # file_name = 'examples_times.csv'
-    file_name = 'UCB-Trace-846890339-848409417.csv'
+    # file_name = 'UCB-Trace-846890339-848409417.csv'
+    file_name = 'UCB-duplicated.csv'
     # file_name = 'UCB-Trace-846890339-848409417_depart.csv'
     trace_path = from_direct + file_name
 
     to_direct = 'outputs/'
-    file_name = 'inter-depart_time_autocor.txt'
+    file_name = 'inter-depart_time_autocor_duplicated_trace.txt'
     # file_name = 'inter-depart_time_autocor_expo.txt'
     output_file = to_direct + file_name
 
-    # get_autocor_departure(trace_path, output_file, 'w')
-    multi_autocor_departure()
+    get_autocor_departure(trace_path, output_file, 'w')
+    # multi_autocor_departure()
 
 if __name__ == '__main__':
     main()
