@@ -17,6 +17,7 @@ def extract_trace(trace_path, generated):
                 continue
             attris = line.split()
             arrival_time = float(attris[0])
+            start_time = float(attris[1])
             end_time = float(attris[2])
             if is_first:
                 arrival_time_q = arrival_time
@@ -27,8 +28,12 @@ def extract_trace(trace_path, generated):
                 output.write(result + '\n')
                 is_first = False
                 continue
+            # if not (arrival_time > arrival_time_q \
+            #     and end_time > end_time_q):
+            #     continue
             if not (arrival_time > arrival_time_q \
-                and end_time > end_time_q):
+                and end_time > end_time_q \
+                and start_time >= end_time_q):
                 continue
             i_a_time = arrival_time - arrival_time_q
             i_d_time = end_time - end_time_q
@@ -46,12 +51,12 @@ def extract_trace(trace_path, generated):
         print('', flush=True)
 
 def main():
-    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
+    from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
     file_name = 'UCB-Trace-846890339-848409417.csv'
     trace_path = from_direct + file_name
 
-    to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time/'
-    # file_name = 'UCB-Trace.csv'
+    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    file_name = 'UCB-Trace.csv'
     generated = to_direct + file_name
     extract_trace(trace_path, generated)
 

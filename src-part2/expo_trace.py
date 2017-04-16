@@ -7,7 +7,8 @@ from datetime import timedelta
 from rvgs import Exponential as Expo
 
 def expo_trace(trace_path, generated):
-    MEAN_EXPO = 25.015432078075502
+    # MEAN_EXPO = 25.015432078075502
+    MEAN_EXPO = 16.750031612867385
     # MEAN_EXPO = 0.1
     # MEAN_EXPO = 16.412899
     with open(trace_path) as trace, \
@@ -73,11 +74,14 @@ def main():
     # from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_lag_time/'
     # file_name = 'examples_times.csv'
 
-    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
-    file_name = 'UCB-Trace-846890339-848409417.csv'
+    # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    # file_name = 'UCB-Trace-846890339-848409417.csv'
+    file_name = 'UCB-Trace.csv'
     trace_path = from_direct + file_name
 
-    to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
+    # to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
+    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
     generated = to_direct + file_name
 
     expo_trace(trace_path, generated)

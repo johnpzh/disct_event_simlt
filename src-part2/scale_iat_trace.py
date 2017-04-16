@@ -67,10 +67,11 @@ def scale_iat_trace(trace_path, generated, scale):
 def main():
     # from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted_departure/'
     # from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/expo_service_time/'
-    # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
-    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
+    # from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
     # file_name = 'examples_times.csv'
-    file_name = 'UCB-Trace-846890339-848409417.csv'
+    file_name = 'UCB-Trace.csv'
+    # file_name = 'UCB-Trace-846890339-848409417.csv'
     # file_name = 'UCB-Trace-846890339-848409417_depart.csv'
     trace_path = from_direct + file_name
 
@@ -81,12 +82,12 @@ def main():
     # output_file = to_direct + file_name
 
     # For original trace
-    # scale_min = 0.14813221703 # 0.1/0.6750725939409181
-    # scale_max = 1.33318995331 # 0.9/0.6750725939409181
+    # scale_min = 0.1/0.5245859938281731
+    # scale_max = 0.9/0.5245859938281731
 
     # For exponential-service-time trace
-    scale_min = 0.14775121835 # 0.1/0.676813369903958
-    scale_max = 1.32976096516 # 0.9/0.676813369903958
+    scale_min = 0.1/0.5267922494111559
+    scale_max = 0.9/0.5267922494111559
     # 0.1/0.676813369903958
     scales = np.linspace(scale_min, scale_max, 5)
     count = 0

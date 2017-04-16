@@ -163,7 +163,7 @@ def main():
     # Inter-departure time autocorrelation
     input_file = 'outputs/inter-depart_time_autocor_duplicated_trace.txt'
     output_file = 'outputs/inter-depart_time_autocor_duplicated_trace.pdf'
-    plot_idt_autocor(input_file, output_file)
+    # plot_idt_autocor(input_file, output_file)
 
     file_name = 'inter-depart_time_autocor_expo.txt'
     input_file = from_direct + file_name
@@ -173,7 +173,7 @@ def main():
 
 
     # Mean waiting Queue length and Mean delay times vs. System Utilization
-    # plot_metrics_vs_util()
+    plot_metrics_vs_util()
 
     # Inter-departure time autocorrelation of 5 different new traces
     # plot_multi_autocor_departure()

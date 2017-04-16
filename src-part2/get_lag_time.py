@@ -1,8 +1,10 @@
 '''add the lag time to the trace'''
 import os
 import subprocess as sp
+import statistics as stat
 from datetime import datetime
 from datetime import timedelta
+
 
 def get_lag_time(trace_path, extracted):
     '''Calculate job delay time, 
@@ -32,14 +34,21 @@ def get_delay_time_mean(trace_path):
     with open(trace_path) as trace:
         delay_time = 0.0
         count = 0
+        delay_times = list()
         for line in trace:
             count += 1
             attris = line.split()
             dt = float(attris[6])
+            delay_times.append(dt)
             delay_time += dt
             if count % 100000 == 0:
                 print('.', end='', flush=True)
         print('', flush=True)
+        mean = stat.mean(delay_times)
+        var = stat.pvariance(delay_times)
+        stdev = stat.pstdev(delay_times)
+        cv = stdev / mean
+        print('mean:', mean, 'var:', var, 'cv', cv)#test
         delay_time_mean = delay_time / count
         return delay_time_mean
 
@@ -192,13 +201,16 @@ def extract_single():
     file_name = 'UCB-Trace-846890339-848409417.csv'
     # file_name = 'UCB-Trace-846890339-848409417.csv'
     # trace_path = from_direct + file_name
-    print('File:', file_name)
+    # print('File:', file_name)
 
-    # to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
-    # to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
-    to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/duplicated/'
+    # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
+    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/trashes/delay_time_depart/'
+    # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/trashes/expo_service_time_depart/'
     # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/expo_service_time/'
-    file_name = 'UCB-duplicated.csv'
+    # file_name = 'UCB-duplicated.csv'
+    file_name = 'UCB-Trace.csv'
+    # file_name = 'UCB-Trace-846890339-848409417.csv'
     extracted = to_direct + file_name
     # get_lag_time(trace_path, extracted)
     # for i in range(1, 11):
@@ -225,20 +237,22 @@ def extract_single():
 
 def extract(output):
     # from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/extracted/'
-    file_name = 'UCB-Trace-846890339-848409417.csv'
+    # file_name = 'UCB-Trace-846890339-848409417.csv'
+    file_name = 'UCB-Trace.csv'
     # file_name = 'UCB-Trace-846890339-848409417.csv'
     # trace_path = from_direct + file_name
-    print('File:', file_name)
+    # print('File:', file_name)
 
-    # to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
-    to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/expo_service_time_depart/'
+    # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
     # to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace/expo_service_time/'
     # extracted = to_direct + file_name
     # get_lag_time(trace_path, extracted)
     for i in range(1, 6):
         to_file_name = file_name[:-4] + '_{0:02d}.csv'.format(i)
         extracted = to_direct + to_file_name
-
+        print('===========================')
+        print('File:', to_file_name)
         # Mean Job delay time
         delay_time_mean = get_delay_time_mean(extracted)
         print('delay_time_mean:', delay_time_mean)
@@ -260,8 +274,8 @@ def extract(output):
 
 
 if __name__ == '__main__':
-    extract_single()
-    # output_file = 'outputs/expo_metrics_vs_util.txt'
+    # extract_single()
+    output_file = 'outputs/expo_metrics_vs_util.txt'
     # output_file = 'outputs/origin_metrics_vs_util.txt'
-    # with open(output_file, 'w') as output:
-    #     extract(output)
+    with open(output_file, 'w') as output:
+        extract(output)
