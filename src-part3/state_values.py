@@ -152,7 +152,7 @@ def get_queue_lengths_batches(trace_file):
                 start_times.clear()
                 end_times.clear()
             count += 1
-        print('@155 len(system_queue_batchs):', len(system_queue_batchs))#test
+        # print('@155 len(system_queue_batchs):', len(system_queue_batchs))#test
         server_queue_mean = stat.mean(server_queue_batchs)
         wait_queue_mean = stat.mean(wait_queue_batchs)
         system_queue_mean = stat.mean(system_queue_batchs)
@@ -315,7 +315,7 @@ def main():
     global RESULT
     directory = 'outputs/'
     # file_name = 'trace_sjf.csv'
-    file_name = 'trace_fcfs.csv'
+    file_name = 'trace_fifo.csv'
     trace_file = directory + file_name
     # get_queue_lengths(trace_file)
     get_other_values(trace_file)

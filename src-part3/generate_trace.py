@@ -17,9 +17,11 @@ class Job:
         self.end_time = -1
         self.delay = -1
         self.wait = -1
+        self.inter_arrival_time = -1
         # self.queue = -1 # the number of jobs in the queue when the job starts
 
-def generate_trace_sjf(trace_file):
+def generate_trace_sjf(output_file):
+# def generate_trace_sjf(trace_file, output_file):
     '''Generate the trace with Shortest Job First queue'''
     global K
     global B
@@ -27,22 +29,41 @@ def generate_trace_sjf(trace_file):
     k_batch = K
     b_size = B
     num = k_batch * b_size
-    # num = b_size
-    # offset = 0.0
     now = 0.0
-    # trace = list()
-    # for k in range(K):
-    #     if k != 0:
-    #         now += np.random.random()
-        # now = offset
-        # Arrival times and service times
+    arrival_time_q = 0.0
+    arv_t = 0
+    RANGE = 20
+
+    # Arrival times and service times
     origin = list()
+    # with open(trace_file) as trace:
+    #     count = 0
+    #     for line in trace:
+    #         job = Job()
+    #         attris = line.split()
+    #         job.arrival_time = float(attris[0])
+    #         job.service_time = np.random.gamma(4, 0.02)
+    #         origin.append(job)
+    #         count += 1
+    #         # if count == 1:
+    #         #     job.inter_arrival_time = 0
+    #         # else:
+    #         #     job.inter_arrival_time = job.arrival_time - arrival_time_q
+    #         # arrival_time_q = job.arrival_time
+    #         job.inter_arrival_time = float(attris[4])
+    #         if count == num:
+    #             break
+    
     for i in range(num):
         job = Job()
         job.arrival_time = now
         # now += np.random.poisson(10.0)
-        now += np.random.exponential(1/10.0)
+        # now += np.random.exponential(1/10.0)
+        arv_t = arv_t % (RANGE - 1) + 1
+        now += arv_t / 100
         job.service_time = np.random.gamma(4, 0.02)
+        job.inter_arrival_time = job.arrival_time - arrival_time_q
+        arrival_time_q = job.arrival_time
         origin.append(job)
     # print(origin)
 
@@ -50,20 +71,12 @@ def generate_trace_sjf(trace_file):
     trace = list()
     queue = list()
     i = 0
-    # now = 0.0
-    # time_q = 0.0
     while i < num:
         if len(queue) != 0:
             job = Job()
-            job.service_time, job.arrival_time = hq.heappop(queue)
-            # print('job:', 'job.service_time:', job.service_time,\
-            #     'job.arrival_time:', job.arrival_time)#test
-            # print('queue:')#test
-            # print('++++++++++++++++++++++++++++++++++')
-            # for j in queue:
-            #     print('(st:{}, at:{})'.format(j[0],
-            #         j[1]))#test
-            # print('++++++++++++++++++++++++++++++++++')
+            job.service_time, \
+                job.arrival_time, \
+                job.inter_arrival_time = hq.heappop(queue)
         else:
             job = origin[i]
             i += 1
@@ -72,7 +85,6 @@ def generate_trace_sjf(trace_file):
         job.end_time = job.start_time + job.service_time
         job.delay = job.start_time - job.arrival_time
         job.wait = job.end_time - job.arrival_time
-        # job.queue = len(queue)
         trace.append(job)
         now = job.end_time
 
@@ -81,21 +93,24 @@ def generate_trace_sjf(trace_file):
             if job.arrival_time > now:
                 break
             hq.heappush(queue, \
-                (job.service_time, job.arrival_time))
+                (job.service_time, \
+                job.arrival_time, \
+                job.inter_arrival_time))
             i += 1
     while len(queue) != 0:
         job = Job()
-        job.service_time, job.arrival_time = hq.heappop(queue)
+        job.service_time, \
+            job.arrival_time, \
+            job.inter_arrival_time = hq.heappop(queue)
         job.start_time = now
         job.end_time = job.start_time + job.service_time
         job.delay = job.start_time - job.arrival_time
         job.wait = job.end_time - job.arrival_time
-        # job.queue = len(queue)
         trace.append(job)
         now = job.end_time
 
     # Save the origin
-    with open(trace_file, 'w') as output:
+    with open(output_file, 'w') as output:
         for job in trace:
             attris = list()
             attris.append(str(job.arrival_time))
@@ -104,11 +119,12 @@ def generate_trace_sjf(trace_file):
             attris.append(str(job.end_time))
             attris.append(str(job.delay))
             attris.append(str(job.wait))
+            attris.append(str(job.inter_arrival_time))
             # attris.append(str(job.queue))
             line = ' '.join(attris)
             output.write(line + '\n')
 
-def generate_trace_fcfs(trace_file):
+def generate_trace_fifo(trace_file):
     '''Generate the trace with First Come First Serve queue'''
     global K
     global B
@@ -117,15 +133,30 @@ def generate_trace_fcfs(trace_file):
     b_size = B
     num = k_batch * b_size
     now = 0.0
+    arrival_time_q = 0.0
+    arv_t = 0
+    RANGE = 20
     # Arrival times and service times
+    # for i in range(num):
+    #     job = Job()
+    #     job.arrival_time = now
+    #     # now += np.random.poisson(10.0)
+    #     now += np.random.exponential(1/10.0)
+    #     job.service_time = np.random.gamma(4, 0.02)
+    #     origin.append(job)
+    # print(origin)
+
     for i in range(num):
         job = Job()
         job.arrival_time = now
         # now += np.random.poisson(10.0)
-        now += np.random.exponential(1/10.0)
+        # now += np.random.exponential(1/10.0)
+        arv_t = arv_t % (RANGE - 1) + 1
+        now += arv_t / 100
         job.service_time = np.random.gamma(4, 0.02)
+        job.inter_arrival_time = job.arrival_time - arrival_time_q
+        arrival_time_q = job.arrival_time
         origin.append(job)
-    # print(origin)
 
     # Generate the trace
     trace = list()
@@ -135,16 +166,6 @@ def generate_trace_fcfs(trace_file):
     while i < num:
         if len(queue) != 0:
             job = queue.pop(0)
-            # job = Job()
-            # job.service_time, job.arrival_time = hq.heappop(queue)
-            # print('job:', 'job.service_time:', job.service_time,\
-            #     'job.arrival_time:', job.arrival_time)#test
-            # print('queue:')#test
-            # print('++++++++++++++++++++++++++++++++++')
-            # for j in queue:
-            #     print('(st:{}, at:{})'.format(j.service_time,
-            #         j.arrival_time))#test
-            # print('++++++++++++++++++++++++++++++++++')
         else:
             job = origin[i]
             i += 1
@@ -187,6 +208,7 @@ def generate_trace_fcfs(trace_file):
             attris.append(str(job.end_time))
             attris.append(str(job.delay))
             attris.append(str(job.wait))
+            attris.append(str(job.inter_arrival_time))
             # attris.append(str(job.queue))
             line = ' '.join(attris)
             output.write(line + '\n')
@@ -196,13 +218,16 @@ def main():
 
     # SJF
     file_name = 'trace_sjf.csv'
-    trace_file = directory + file_name
-    generate_trace_sjf(trace_file)
+    output_file = directory + file_name
+
+    # trace_file = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/duplicated/UCB-duplicated.csv'
+    # generate_trace_sjf(trace_file, output_file)
+    # generate_trace_sjf(output_file)
 
     # FCFS
-    file_name = 'trace_fcfs.csv'
+    file_name = 'trace_fifo.csv'
     trace_file = directory + file_name
-    generate_trace_fcfs(trace_file)
+    generate_trace_fifo(trace_file)
 
 if __name__ == '__main__':
     main()

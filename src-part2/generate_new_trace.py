@@ -30,18 +30,22 @@ def generate_new_trace(trace_path, generated):
             start_time = float(attris[1]) + offset + normal()
             end_time = float(attris[2]) + offset + normal()
             data_len = float(attris[3]) + normal()
-            # i_a_time = float(attris[4])
-            # service_time = float(attris[5])
-            # job_delay = float(attris[6])
+            # arrival_time = float(attris[0]) + offset
+            # start_time = float(attris[1]) + offset
+            # end_time = float(attris[2]) + offset
+            # data_len = float(attris[3])
+
             if count == 1:
                 arrival_time_q = arrival_time
                 start_time_q = start_time
                 end_time_q = end_time
 
-            while start_time < end_time_q:
+            while count != 1 and start_time < end_time_q:
+                # start_time = float(attris[1]) + offset
                 start_time = float(attris[1]) + offset + normal()
+                print('@46')
 
-            i_a_time = arrival_time - arrival_time_q
+            i_a_time = arrival_time - arrival_time_q # ERROR: arrival_time_q never updates
             service_time = end_time - start_time
             job_delay = end_time - arrival_time
             i_d_time = end_time - end_time_q
@@ -58,11 +62,12 @@ def generate_new_trace(trace_path, generated):
             output.write(line_new + '\n')
 
 def main():
-    from_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
-    file_name = 'UCB-Trace-846890339-848409417.csv'
+    from_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/delay_time_depart/'
+    # file_name = 'UCB-Trace-846890339-848409417.csv'
+    file_name = 'UCB-Trace.csv'
     trace_path = from_direct + file_name
 
-    to_direct = '/Users/johnz/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/duplicated/'
+    to_direct = '/scratch/zpeng.scratch/Dropbox/Works/homeworks/626 Data Analysis and Simulation/trace2/duplicated/'
     file_name = 'UCB-duplicated.csv'
     generated = to_direct + file_name
 
